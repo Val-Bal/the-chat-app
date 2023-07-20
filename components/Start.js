@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ImageBackground, StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
+import { ImageBackground, StyleSheet, Text, View, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 
 const image = require('/Users/valeriabalducci/projects/projectsCF_A5/the-chat-app/img/background-image.png');
 
@@ -57,6 +57,10 @@ const Start = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
+            {/*fix keyboard hiding message input field on Android*/}
+            { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null }
+            {/*fix keyboard hiding message input field on iOS*/}
+            { Platform.OS === "ios" ? <KeyboardAvoidingView behavior="padding" /> : null }
         </View>
     )
 }
