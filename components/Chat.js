@@ -1,9 +1,13 @@
+// import
 import { useState, useEffect } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
 import { Bubble, GiftedChat } from "react-native-gifted-chat";
 
-const Chat = ({ route, navigation }) => {
-    const {name, color} = route.params;
+// import elements to fetch messages from database
+import { collection, getDocs, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
+
+const Chat = ({ db, route, navigation }) => {
+  const { name, color, uid } = route.params;
      // initialize state
     const [messages, setMessages] = useState([]);
 
@@ -13,28 +17,38 @@ const Chat = ({ route, navigation }) => {
     }, []);
 
     useEffect(() => {
-        setMessages([
-          {
-            _id: 1,
-            text: "Hello",
-            createdAt: new Date(),
-            user: {
-              _id: 2,
-              name: "React Native",
-              avatar: "https://placeimg.com/140/140/any",
-            },
-          },
-          {
-            _id: 2,
-            text: name + ", you've entered the chat",
-            createdAt: new Date(),
-            system: true,
-          },
-        ]);
+        // set state with static message
+        navigation.setOptions({ title: name });
+        
+        addDoc(collection(db, "messages"), {
+        _id: Date.now(),
+        text: name + " entered the chat",
+        createdAt: new Date(),
+        system: true,
+        });
+
+        const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+        const unsubMessages = onSnapshot(q, (documentsSnapshot) => {
+        let newMessages = [];
+        documentsSnapshot.forEach(doc => {
+            newMessages.push(
+            {
+                id: doc.id,
+                ...doc.data(),
+                createdAt: new Date(doc.data().createdAt.toMillis())
+            })
+        });
+        setMessages(newMessages);
+        });
+
+        return () => {
+        if (unsubMessages) unsubMessages();
+        }
       }, []);
     
       // custom function onSend(), is called when user sends message
       const onSend = (newMessages) => {
+        addDoc(collection(db, "messages"), newMessages[0])
         setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages))
       }
     
@@ -58,7 +72,8 @@ const Chat = ({ route, navigation }) => {
             renderBubble={renderBubble}
             onSend={messages => onSend(messages)}
             user={{
-                _id: 1
+                _id: uid,
+                name: name,
             }}
             />
             {/*fix keyboard hiding message input field on Android*/}
@@ -68,6 +83,7 @@ const Chat = ({ route, navigation }) => {
         </View>
     )
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
