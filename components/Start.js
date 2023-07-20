@@ -77,11 +77,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     inputContainer: {
-        height: windowHeight * 0.44,
-        width: windowWidth * 0.88, 
+        flex: 1,
         backgroundColor: '#FFFFFF',
-        padding: '6%',
-        marginTop: windowHeight * 0.1
+        padding: '6%'
     },
     textInput: {
         fontSize: 16,
