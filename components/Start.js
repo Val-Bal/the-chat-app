@@ -77,9 +77,11 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     inputContainer: {
-        flex: 1,
+        height: windowHeight * 0.44,
+        width: windowWidth * 0.88, 
         backgroundColor: '#FFFFFF',
-        padding: '6%'
+        padding: '6%',
+        marginTop: windowHeight * 0.1
     },
     textInput: {
         fontSize: 16,
@@ -113,10 +115,10 @@ const styles = StyleSheet.create({
     button: {
         alignContent: 'center',
         backgroundColor: '#757083',
-        padding: 10
+        padding: 10,
+        marginTop: 30
     },
     buttonText: {
-        flex: 2,
         fontSize: 16,
         fontWeight: '600',
         color: '#FFFFFF',
