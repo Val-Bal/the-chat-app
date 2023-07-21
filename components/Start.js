@@ -32,7 +32,7 @@ const Start = ({navigation}) => {
     return (
         <View style={styles.container}>
             <ImageBackground source={image} resizeMode='cover' style={styles.image}>
-                <Text style={styles.appTitle}>App title</Text>
+                <Text style={styles.appTitle}>The Chat App</Text>
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.textInput}
