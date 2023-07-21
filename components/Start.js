@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Image, ImageBackground, StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { Alert, ImageBackground, StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const image = require('/Users/valeriabalducci/projects/projectsCF_A5/the-chat-app/img/background-image.png');

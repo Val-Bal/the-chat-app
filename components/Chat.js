@@ -1,16 +1,18 @@
 // import
 import { useState, useEffect } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
-import { Bubble, GiftedChat } from "react-native-gifted-chat";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 
 // import elements to fetch messages from database
-import { collection, getDocs, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Chat = ({ db, route, navigation }) => {
+const Chat = ({ db, route, navigation, isConnected}) => {
   const { name, color, uid } = route.params;
      // initialize state
     const [messages, setMessages] = useState([]);
 
+    let unsubMessages;
     // set state with static message
     useEffect(() => {
         navigation.setOptions({title: name});
@@ -27,34 +29,55 @@ const Chat = ({ db, route, navigation }) => {
         system: true,
         });
 
-        const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-        const unsubMessages = onSnapshot(q, (documentsSnapshot) => {
-        let newMessages = [];
-        documentsSnapshot.forEach(doc => {
-            newMessages.push(
-            {
-                id: doc.id,
-                ...doc.data(),
-                createdAt: new Date(doc.data().createdAt.toMillis())
-            })
-        });
-        setMessages(newMessages);
-        });
+        if (isConnected === true) {
+          // unregister current onSnapshot() listener to avoid registering multiple listeners when useEffect code is reexecuted
+          if (unsubMessages) unsubMessages();
+          unsubMessages = null;
+
+          const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+          unsubMessages = onSnapshot(q, (documentsSnapshot) => {
+            let newMessages = [];
+            documentsSnapshot.forEach(doc => {
+              newMessages.push(
+                {
+                  id: doc.id,
+                  ...doc.data(),
+                  createdAt: new Date(doc.data().createdAt.toMillis())
+                })
+            });
+            cacheMessages(newMessages);
+            setMessages(newMessages);
+          });
+        } else loadCachedMessages();
 
         return () => {
         if (unsubMessages) unsubMessages();
         }
-      }, []);
     
-      // custom function onSend(), is called when user sends message
-      const onSend = (newMessages) => {
-        addDoc(collection(db, "messages"), newMessages[0])
-        setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages))
+    }, [isConnected]);
+
+    const cacheMessages = async (messagesToCache) => {
+      try {
+        await AsyncStorage.setItem('messages', JSON.stringify(messagesToCache));
+      } catch (error) {
+        console.log(error.message);
       }
+    }
+  
+    const loadCachedMessages = async () => {
+      const cachedMessages = await AsyncStorage.getItem("messages") || [];
+      setMessages(JSON.parse(cachedMessages));
+    }
+
+    // custom function onSend(), is called when user sends message
+    const onSend = (newMessages) => {
+      addDoc(collection(db, "messages"), newMessages[0])
+      setMessages(previousMessages => GiftedChat.append(previousMessages, newMessages))
+    }
     
-      const renderBubble = (props) => {
-        return <Bubble {...props}
-        wrapperStyle={{
+    const renderBubble = (props) => {
+      return <Bubble {...props}
+      wrapperStyle={{
           right: {
             backgroundColor: "#000"
           },
@@ -62,8 +85,12 @@ const Chat = ({ db, route, navigation }) => {
             backgroundColor: "#FFF"
           }
         }} />
-      }
+    }
     
+    const renderInputToolbar = (props) => {
+      if (isConnected) return <InputToolbar {...props} />;
+      else return null;
+    }
 
     return (
         <View style={[styles.container, {backgroundColor: color}]}>
