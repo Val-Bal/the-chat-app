@@ -135,7 +135,8 @@ const styles = StyleSheet.create({
     selectColorElement: {
         flex: 1,
         justifyContent: 'space-around',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: 30
     },
     colorSelector: {
         fontSize: 16,
