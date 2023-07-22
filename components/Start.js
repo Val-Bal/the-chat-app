@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-around',
         flexDirection: 'row',
-        marginBottom: 30
+        marginBottom: 50
     },
     colorSelector: {
         fontSize: 16,
