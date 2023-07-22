@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
       },
     image:{
         flex: 1,
-        justifyContent: 'space-between',
+        //justifyContent: 'space-between',
         padding: '6%'
     },
     appTitle: {
@@ -114,7 +114,8 @@ const styles = StyleSheet.create({
     inputContainer: {
         flex: 1,
         backgroundColor: '#FFFFFF',
-        padding: '6%'
+        padding: '6%',
+        flexDirection: 'row'
     },
     icon: {
         height: 20,
@@ -131,10 +132,6 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         opacity: 0.5
     },
-     icon: {
-    height: 20,
-    width: 20
-  },
     selectColorElement: {
         flex: 1,
         justifyContent: 'space-around',
