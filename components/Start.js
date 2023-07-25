@@ -46,6 +46,7 @@ const Start = ({navigation}) => {
                         placeholder='Your Name'
                         placeholderTextColor='#757083'
                     />
+        </View>
                     <Text style={styles.colorSelector}>Choose background color:</Text>
                     <View style={styles.selectColorElement}>
                         <TouchableOpacity 
@@ -75,7 +76,6 @@ const Start = ({navigation}) => {
                     >
                         <Text style={styles.buttonText}>Start Chatting</Text>
                     </TouchableOpacity>
-                    </View>
                 </View>
             </ImageBackground>
             {/*fix keyboard hiding message input field on Android*/}
@@ -114,22 +114,33 @@ const styles = StyleSheet.create({
     inputContainer: {
         flex: 1,
         backgroundColor: '#FFFFFF',
-        padding: '6%',
+        // padding: '6%',
         //flexDirection: 'row'
+        flexDirection: "row",
+        borderWidth: 1,
+        padding: 15,
+        marginBottom: 30,
     },
     icon: {
         height: 20,
         width: 20
       },
     textInput: {
+        // fontSize: 16,
+        // fontWeight: '300',
+        // color: '#757083',
+        // padding: 15,
+        // borderWidth: 1,
+        // borderColor: '#757083',
+        // marginTop: 15,
+        // marginBottom: 15,
+        // opacity: 0.5
+        backgroundColor: "transparent",
+        borderWidth: 0,
+        marginLeft: 10,
         fontSize: 16,
-        fontWeight: '300',
-        color: '#757083',
-        padding: 15,
-        borderWidth: 1,
-        borderColor: '#757083',
-        marginTop: 15,
-        marginBottom: 15,
+        fontWeight: "300",
+        color: "#757083",
         opacity: 0.5
     },
     selectColorElement: {
